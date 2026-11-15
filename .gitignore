@@ -1,0 +1,44 @@
+# binarios y objetos
+pasillo-seguro
+pasillo-seguro-arm64
+*.o
+*.a
+*.so
+*.so.*
+
+# datos de ejecucion
+data/
+config.env
+*.pid
+*.log
+*.tmp
+snapshots/
+
+# capturas y resultados
+capturas/
+resultados*/
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.webm
+
+# python/tests
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+
+# sistema/editor
+.DS_Store
+*.swp
+
+# documentos internos del pipeline
+PLAN.md
+AUDIT_REPORT.md
+
+# libjpeg arm64 copiada desde la placa (se obtiene con scripts/build_arm64.sh)
+third_party/libjpeg-arm64/libjpeg.so.62
+
+# binario de pruebas
+tests/test_core

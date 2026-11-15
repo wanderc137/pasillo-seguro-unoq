@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0b0f14">
+  <title>Pasillo Seguro — UNO Q</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <header class="top">
+    <div>
+      <h1>Pasillo Seguro</h1>
+      <p class="sub">Percepción local en Arduino UNO Q · sin nube</p>
+    </div>
+    <div class="badge" id="stateBadge">inactivo</div>
+  </header>
+
+  <main>
+    <section class="card">
+      <div class="row">
+        <div class="field grow">
+          <label for="url">IP o URL del teléfono (IP Webcam)</label>
+          <input id="url" type="text" inputmode="url" autocomplete="off"
+                 placeholder="192.168.1.9:8080" spellcheck="false">
+          <p class="hint">Acepta <code>192.168.1.9</code>, <code>192.168.1.9:8080</code>
+             o <code>http://192.168.1.9:8080/video</code>.</p>
+        </div>
+        <div class="field">
+          <label for="transport">Conexión</label>
+          <select id="transport">
+            <option value="lan">Wi-Fi / LAN</option>
+            <option value="usb">USB / ADB</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row wrap">
+        <button id="probeBtn" class="btn secondary">Probar conexión</button>
+        <button id="startBtn" class="btn primary">Iniciar</button>
+        <button id="stopBtn" class="btn danger">Detener</button>
+        <button id="demoBtn" class="btn ghost">Demo sintética</button>
+        <button id="usbSetupBtn" class="btn secondary hidden">Preparar USB</button>
+        <button id="usbTeardownBtn" class="btn ghost hidden">Desconectar USB</button>
+      </div>
+
+      <div id="usbPanel" class="usbPanel hidden">
+        <strong>Modo USB/ADB</strong>
+        <p class="hint">Conectá el teléfono por USB, activá <em>Depuración USB</em> y aceptá
+           el diálogo RSA. La cámara queda en <code>127.0.0.1:8080</code> y esta página
+           en <code>127.0.0.1:8020</code>.</p>
+        <p class="mono" id="usbState">adb: —</p>
+      </div>
+
+      <p class="statusLine" id="probeInfo">Escribí la IP del teléfono y probá la conexión.</p>
+
+      <div class="row wrap sensitivity">
+        <label for="sensitivity">Sensibilidad</label>
+        <select id="sensitivity">
+          <option value="low">Baja (más permisiva)</option>
+          <option value="medium" selected>Media</option>
+          <option value="high">Alta (más conservadora)</option>
+        </select>
+        <span class="hint">Ajustala según la feria y la velocidad al caminar.</span>
+      </div>
+    </section>
+
+    <section class="card videoCard">
+      <div id="videoWrap" class="videoWrap risk-idle">
+        <img id="stream" alt="Vista en vivo del pasillo" src="">
+        <div id="videoHint" class="videoHint">
+          <strong>Sin imagen todavía</strong>
+          <span>Configurá la IP y presioná Iniciar.</span>
+        </div>
+        <div id="riskBadge" class="riskBadge">—</div>
+      </div>
+
+      <div class="metrics">
+        <div class="metric"><span>Riesgo</span><strong id="metricRisk">—</strong></div>
+        <div class="metric"><span>Objetos</span><strong id="metricObjects">—</strong></div>
+        <div class="metric"><span>FPS</span><strong id="metricFps">—</strong></div>
+        <div class="metric"><span>Latencia</span><strong id="metricLatency">—</strong></div>
+      </div>
+      <p class="mono source" id="sourceText">fuente: —</p>
+      <p class="statusLine" id="statusMessage"></p>
+    </section>
+
+    <section class="card help">
+      <h2>Cómo usarlo en la feria</h2>
+      <ol>
+        <li>El teléfono corre <strong>IP Webcam</strong> y está en la misma red local que la UNO Q
+            (hotspot del teléfono, USB o Wi-Fi sin internet).</li>
+        <li>En IP Webcam, subí la resolución de video y de foto al máximo que aguante el teléfono.</li>
+        <li>Escribí la IP del teléfono acá y tocá <strong>Probar conexión</strong>.</li>
+        <li>Presioná <strong>Iniciar</strong> y caminá con el teléfono apuntando al frente.</li>
+        <li><strong>Verde</strong>: camino libre. <strong>Ámbar</strong>: atención.
+            <strong>Rojo</strong>: detenerse.</li>
+      </ol>
+      <p class="hint">La UNO Q procesa todo localmente. No se envía video a internet.
+         El borde es una ayuda: no reemplaza la atención de la persona.</p>
+      <p class="hint">Sin teléfono a mano, <strong>Demo sintética</strong> muestra
+         objetos en movimiento y el cambio de borde para verificar la instalación.</p>
+      <p class="hint">Si el teléfono cambia de IP, escribila de nuevo o usá
+         <strong>Probar conexión</strong>.</p>
+    </section>
+  </main>
+
+  <footer>
+    <span>pasillo-seguro · UNO Q</span>
+    <span id="version">v1.0.0</span>
+  </footer>
+
+  <script src="/app.js"></script>
+</body>
+</html>

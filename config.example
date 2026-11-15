@@ -1,0 +1,18 @@
+# Copiar a config.env y ajustar. NO subir config.env.
+# El servicio scripts/servicio.sh carga config.env automaticamente.
+
+# Puerto HTTP local de la UNO Q. No usar 8000 ni 8010.
+PS_PORT=8020
+
+# IP/URL por defecto del telefono con IP Webcam (opcional).
+# Tambien se puede escribir desde la pagina antes de Iniciar.
+PS_CAMERA_URL=
+
+# lan = Wi-Fi/hotspot; usb = ADB por cable (si esta disponible).
+PS_TRANSPORT=lan
+
+# Ruta opcional al binario adb (por defecto el que trae Arduino).
+PS_ADB_PATH=
+
+# Directorio de datos (PID, log). Por defecto: <proyecto>/data.
+# PS_DATA_DIR=/home/arduino/pasillo-seguro-unoq/data
