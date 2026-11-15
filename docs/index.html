@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Pasillo Seguro — Arduino UNO Q</title>
+<meta content="Un teléfono con IP Webcam transmite video por la red local; la UNO Q lo decodifica y calcula el riesgo de choque sin nube. El borde de la página cambia de color: verde para avanzar, ámbar para precaución, rojo para detenerse." name="description"/>
+<meta content="wanderc137" name="author"/>
+<meta content="website" property="og:type"/>
+<meta content="Pasillo Seguro — Arduino UNO Q" property="og:title"/>
+<meta content="Un teléfono con IP Webcam transmite video por la red local; la UNO Q lo decodifica y calcula el riesgo de choque sin nube. El borde de la página cambia de color: verde para avanzar, ámbar para precaución, rojo para detenerse." property="og:description"/>
+<meta content="https://wanderc137.github.io/pasillo-seguro-unoq/" property="og:url"/>
+<meta content="https://wanderc137.github.io/pasillo-seguro-unoq/assets/og.png" property="og:image"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="Pasillo Seguro — Arduino UNO Q" name="twitter:title"/>
+<meta content="Un teléfono con IP Webcam transmite video por la red local; la UNO Q lo decodifica y calcula el riesgo de choque sin nube. El borde de la página cambia de color: verde para avanzar, ámbar para precaución, rojo para detenerse." name="twitter:description"/>
+<meta content="https://wanderc137.github.io/pasillo-seguro-unoq/assets/og.png" name="twitter:image"/>
+<link href="data:image/svg+xml,&lt;svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'&gt;&lt;rect width='100' height='100' rx='22' fill='%2305070c'/&gt;&lt;rect x='22' y='22' width='56' height='56' rx='12' fill='none' stroke='%2322C55E' stroke-width='7'/&gt;&lt;circle cx='50' cy='50' r='9' fill='%2322C55E'/&gt;&lt;/svg&gt;" rel="icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Space+Grotesk:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-width:none}
+::-webkit-scrollbar{width:0;height:0}
+::-webkit-scrollbar-track{background:#05070c}
+::-webkit-scrollbar-thumb{background:#2a3448;border-radius:999px;border:2px solid #05070c}
+::-webkit-scrollbar-thumb:hover{background:#3a4a66}
+body{
+  margin:0;background:#05070c;color:#e8edf6;
+  font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.65;-webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+::selection{background:var(--accent);color:#04110c}
+a{color:inherit;text-decoration:none}
+img{max-width:100%;display:block}
+h1,h2,h3,h4{font-family:'Space Grotesk','Inter',sans-serif;line-height:1.05;letter-spacing:-.03em;margin:0}
+p{margin:0}
+.mono{font-family:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace}
+.wrap{width:min(1180px,calc(100% - 48px));margin:0 auto}
+.grid-overlay{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 78%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 78%);
+}
+.glow{
+  position:fixed;z-index:0;pointer-events:none;filter:blur(90px);opacity:.20;
+  width:720px;height:720px;border-radius:50%;
+}
+.glow.one{top:-340px;right:-180px;background:var(--accent)}
+.glow.two{top:380px;left:-380px;background:var(--accent2);opacity:.14}
+.nav{
+  position:sticky;top:0;z-index:50;
+  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+  background:rgba(5,7,12,.72);border-bottom:1px solid rgba(255,255,255,.07);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
+.brand{display:flex;align-items:center;gap:12px;font-weight:700;letter-spacing:-.02em}
+.brand-mark{
+  width:38px;height:38px;border-radius:11px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));color:#05100c;
+  box-shadow:0 0 30px color-mix(in srgb,var(--accent) 35%,transparent);
+}
+.brand-mark svg{width:22px;height:22px;stroke:#05100c;fill:none;stroke-width:1.8}
+.brand small{display:block;font-size:10px;letter-spacing:.18em;color:#8b9ab0;font-weight:600;text-transform:uppercase}
+.nav-links{display:flex;align-items:center;gap:26px;font-size:14px;color:#a9b6c8}
+.nav-links a:hover{color:#fff}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:13px 22px;border-radius:12px;font-weight:650;font-size:14.5px;
+  border:1px solid transparent;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+  white-space:nowrap;
+}
+.btn:hover{transform:translateY(-2px)}
+.btn-primary{
+  background:linear-gradient(100deg,var(--accent),var(--accent2));color:#04110c;
+  box-shadow:0 12px 34px -12px color-mix(in srgb,var(--accent) 70%,transparent);
+}
+.btn-primary:hover{box-shadow:0 18px 44px -12px color-mix(in srgb,var(--accent) 80%,transparent)}
+.btn-ghost{background:rgba(255,255,255,.035);border-color:rgba(255,255,255,.14);color:#e8edf6}
+.btn-ghost:hover{background:rgba(255,255,255,.07)}
+.btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:2}
+.hero{position:relative;z-index:1;padding:96px 0 72px}
+.hero-grid{display:grid;grid-template-columns:1.04fr .96fr;gap:64px;align-items:center}
+.eyebrow{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--accent);display:flex;align-items:center;gap:12px;margin-bottom:22px;
+}
+.eyebrow::before{content:"";width:34px;height:1px;background:var(--accent);opacity:.7}
+h1{font-size:clamp(42px,6.4vw,80px);font-weight:700;letter-spacing:-.045em}
+.grad{background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(17px,1.5vw,19px);color:#aab7c9;margin-top:24px;max-width:60ch}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:34px}
+.hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-top:28px}
+.badge{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.04em;
+  padding:6px 11px;border-radius:999px;border:1px solid rgba(255,255,255,.12);
+  color:#9fb0c4;background:rgba(255,255,255,.025);
+}
+.hero-visual{position:relative}
+.visual-frame{
+  border:1px solid rgba(255,255,255,.11);border-radius:20px;overflow:hidden;
+  background:linear-gradient(160deg,rgba(255,255,255,.055),rgba(255,255,255,.012));
+  box-shadow:0 40px 90px -40px rgba(0,0,0,.9),0 0 0 1px rgba(255,255,255,.02) inset;
+  padding:14px;
+}
+.visual-frame img{border-radius:12px;width:100%}
+.visual-caption{font-size:11.5px;color:#7f8ea3;margin-top:12px;text-align:right;font-family:'JetBrains Mono',monospace;letter-spacing:.04em}
+.float-chip{
+  position:absolute;left:-22px;bottom:34px;display:flex;align-items:center;gap:10px;
+  background:rgba(9,13,21,.92);border:1px solid rgba(255,255,255,.14);border-radius:13px;
+  padding:11px 15px;font-size:12.5px;color:#c7d3e2;backdrop-filter:blur(10px);
+  box-shadow:0 20px 50px -20px #000;
+}
+.float-chip b{color:var(--accent);font-family:'Space Grotesk',sans-serif;font-size:16px}
+.live-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px color-mix(in srgb,var(--accent) 18%,transparent);animation:pulse 2.4s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.stats{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.07);border-bottom:1px solid rgba(255,255,255,.07);background:rgba(255,255,255,.018)}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0}
+.stat{padding:34px 26px;border-left:1px solid rgba(255,255,255,.06)}
+.stat:first-child{border-left:0;padding-left:0}
+.stat-value{font-family:'Space Grotesk',sans-serif;font-size:clamp(28px,3.4vw,42px);font-weight:700;letter-spacing:-.04em;background:linear-gradient(100deg,#fff,#a9b8cc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stat-label{font-size:12px;color:#7f8ea3;letter-spacing:.04em;margin-top:3px}
+.section{position:relative;z-index:1;padding:96px 0}
+.section.tight{padding-top:56px}
+.section-head{max-width:780px;margin-bottom:44px}
+.kicker{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:14px}
+h2{font-size:clamp(30px,4.1vw,50px);font-weight:700}
+.section-sub{color:#97a6ba;font-size:17px;margin-top:16px;max-width:68ch}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.card{
+  border:1px solid rgba(255,255,255,.09);border-radius:18px;padding:28px;
+  background:linear-gradient(160deg,rgba(255,255,255,.045),rgba(255,255,255,.012));
+}
+.card .icon{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 12%,transparent);border:1px solid color-mix(in srgb,var(--accent) 25%,transparent);margin-bottom:18px}
+.card .icon svg{width:21px;height:21px;stroke:var(--accent);fill:none;stroke-width:1.8}
+.card h3{font-size:20px;margin-bottom:9px}
+.card p{color:#9dabbf;font-size:14.5px}
+.timeline{position:relative;margin-top:10px}
+.timeline::before{content:"";position:absolute;left:23px;top:12px;bottom:12px;width:1px;background:linear-gradient(var(--accent),rgba(255,255,255,.08))}
+.step{display:grid;grid-template-columns:48px 1fr;gap:22px;padding:19px 0;align-items:start}
+.step-num{
+  width:47px;height:47px;border-radius:50%;display:grid;place-items:center;
+  border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);
+  background:#080c14;color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;
+  position:relative;z-index:1;box-shadow:0 0 26px -6px color-mix(in srgb,var(--accent) 45%,transparent);
+}
+.step-body h3{font-size:18px;margin-bottom:5px}
+.step-body p{color:#93a2b7;font-size:14.5px;max-width:78ch}
+.figure{
+  border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:16px;
+  background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.008));
+}
+.figure img{width:100%;border-radius:12px}
+.figure figcaption{font-size:12px;color:#7f8ea3;margin-top:12px;font-family:'JetBrains Mono',monospace}
+.arch-points{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px}
+.arch-points .card{padding:20px}
+.arch-points .card h4{font-size:14.5px;margin-bottom:5px}
+.arch-points .card p{font-size:13px}
+.features{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.feature{border:1px solid rgba(255,255,255,.085);border-radius:16px;padding:23px;background:rgba(255,255,255,.022);transition:border-color .2s,background .2s,transform .2s}
+.feature:hover{border-color:color-mix(in srgb,var(--accent) 38%,transparent);background:rgba(255,255,255,.038);transform:translateY(-3px)}
+.feature .icon{width:37px;height:37px;border-radius:10px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent) 10%,transparent);margin-bottom:15px}
+.feature .icon svg{width:19px;height:19px;stroke:var(--accent);fill:none;stroke-width:1.8}
+.feature h3{font-size:15.5px;margin-bottom:6px}
+.feature p{font-size:13.2px;color:#94a3b8;line-height:1.55}
+.stack-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:22px;align-items:start}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+.chip{font-family:'JetBrains Mono',monospace;font-size:11.5px;padding:7px 12px;border-radius:9px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.03);color:#aab8ca}
+.terminal{border:1px solid rgba(255,255,255,.13);border-radius:16px;overflow:hidden;background:#070a10;box-shadow:0 30px 70px -35px #000}
+.terminal-bar{display:flex;align-items:center;gap:7px;padding:12px 15px;border-bottom:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.025)}
+.terminal-bar i{width:10px;height:10px;border-radius:50%;background:#ff5f57;display:block}
+.terminal-bar i:nth-child(2){background:#febc2e}
+.terminal-bar i:nth-child(3){background:#28c840}
+.terminal-bar span{margin-left:8px;font-family:'JetBrains Mono',monospace;font-size:10.5px;color:#718197;letter-spacing:.08em}
+.terminal pre{margin:0;padding:20px;overflow:auto;font-family:'JetBrains Mono',monospace;font-size:12.2px;line-height:1.8;color:#c6d2e0}
+.terminal .p{color:var(--accent)}
+.terminal .c{color:#68788d}
+.note{display:flex;gap:10px;align-items:flex-start;margin-top:14px;font-size:12.5px;color:#8d9cb0;line-height:1.55}
+.note svg{width:16px;height:16px;stroke:var(--accent);fill:none;stroke-width:1.8;flex:0 0 auto;margin-top:2px}
+.docs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.doc-card{display:block;border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:24px;background:rgba(255,255,255,.022);transition:border-color .2s,transform .2s,background .2s}
+.doc-card:hover{border-color:color-mix(in srgb,var(--accent) 40%,transparent);transform:translateY(-3px);background:rgba(255,255,255,.04)}
+.doc-card .tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.15em;color:var(--accent);text-transform:uppercase}
+.doc-card h3{font-size:17px;margin:10px 0 6px}
+.doc-card p{font-size:13px;color:#93a2b7}
+.doc-card .arrow{display:flex;align-items:center;gap:6px;margin-top:16px;font-size:12.5px;color:#c2cfdf}
+.doc-card .arrow svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:2;transition:transform .2s}
+.doc-card:hover .arrow svg{transform:translateX(4px)}
+.gallery{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.gallery .figure{margin:0}
+.cta{position:relative;z-index:1;padding:40px 0 96px}
+.cta-card{
+  border-radius:24px;padding:52px;text-align:center;position:relative;overflow:hidden;
+  border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+  background:
+    radial-gradient(700px 300px at 50% 0%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 70%),
+    linear-gradient(160deg,rgba(255,255,255,.05),rgba(255,255,255,.012));
+}
+.cta-card h2{font-size:clamp(28px,3.7vw,42px)}
+.cta-card p{color:#9dabbf;max-width:62ch;margin:16px auto 0}
+.cta-card .hero-actions{justify-content:center}
+footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.08);padding:52px 0 36px;background:rgba(4,6,10,.6)}
+.foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px}
+.foot-brand{display:flex;align-items:center;gap:11px;font-weight:700;margin-bottom:12px}
+.foot-brand .brand-mark{width:32px;height:32px;border-radius:9px}
+.foot-p{font-size:13px;color:#8493a7;max-width:38ch}
+.foot h4{font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:#718197;margin-bottom:13px;font-weight:500}
+.foot-links{display:flex;flex-direction:column;gap:8px;font-size:13px;color:#9aa9bc}
+.foot-links a:hover{color:#fff}
+.foot-bottom{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.07);margin-top:38px;padding-top:22px;font-size:11.5px;color:#6f7f93;font-family:'JetBrains Mono',monospace}
+.reveal{opacity:1;transform:none;transition:opacity .7s ease,transform .7s ease}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}.live-dot{animation:none}html{scroll-behavior:auto}}
+@media (max-width:980px){
+  .hero-grid,.split,.stack-grid,.gallery{grid-template-columns:1fr}
+  .hero{padding-top:64px}
+  .hero-visual{order:-1}
+  .features{grid-template-columns:1fr 1fr}
+  .arch-points{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .stat:nth-child(3){border-left:0;padding-left:0}
+  .stat{border-top:1px solid rgba(255,255,255,.06)}
+  .stat:nth-child(-n+2){border-top:0}
+  .docs-grid{grid-template-columns:1fr}
+  .foot-grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
+}
+@media (max-width:620px){
+  .wrap{width:calc(100% - 32px)}
+  .features{grid-template-columns:1fr}
+  .stats-grid{grid-template-columns:1fr 1fr}
+  .stat{padding:24px 16px}
+  .cta-card{padding:34px 22px}
+  .float-chip{left:8px;bottom:16px}
+  .foot-grid{grid-template-columns:1fr}
+  .section{padding:72px 0}
+}
+
+.fail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:6px}
+.fail{background:rgba(10,18,24,.55);border:1px solid var(--line);border-radius:14px;padding:18px}
+.fail .v{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.fail h3{font-size:16px;margin:8px 0 6px}
+.fail p{font-size:14px;margin:0;color:var(--muted)}
+.rating-head{display:flex;align-items:center;gap:20px;margin:6px 0 18px;padding:18px 20px;border:1px solid var(--line);border-radius:16px;background:rgba(10,18,24,.5)}
+.rating-avg{font-family:var(--mono);font-size:40px;line-height:1;color:var(--accent)}
+.rating-avg small{font-size:14px;color:var(--muted)}
+.rating-head p{margin:4px 0 0;font-size:14px;color:var(--muted);max-width:70ch}
+.rating{display:grid;gap:2px}
+.rating-row{display:grid;grid-template-columns:165px minmax(90px,1fr) 48px;gap:14px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.rating-row:last-child{border-bottom:0}
+.rating-name{font-size:13.5px;color:var(--text)}
+.rating-bar{height:6px;border-radius:99px;background:rgba(148,190,200,.14);overflow:hidden}
+.rating-bar span{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.rating-score{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:right}
+.rating-note{grid-column:1/-1;font-size:12.5px;color:var(--muted);margin:-4px 0 8px}
+.faq{display:grid;gap:10px;margin-top:4px}
+.faq details{border:1px solid var(--line);border-radius:14px;padding:14px 18px;background:rgba(10,18,24,.4)}
+.faq summary{cursor:pointer;font-weight:600;font-size:14.5px;list-style:none}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"+";float:right;color:var(--accent);font-family:var(--mono)}
+.faq details[open] summary::after{content:"−"}
+.faq p{margin:10px 0 0;font-size:14px;color:var(--muted);line-height:1.7}
+.concept-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:26px;align-items:start}
+.concept-grid p{font-size:15.5px;color:var(--muted);line-height:1.8;margin:0 0 14px}
+.concept-side{border-left:1px solid var(--line);padding-left:22px}
+.concept-side .k{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.concept-side p{font-size:13px;margin:6px 0 16px}
+@media(max-width:760px){.concept-grid,.fail-grid{grid-template-columns:1fr}.concept-side{border-left:0;padding-left:0}}
+
+</style>
+</head>
+<body style="--accent:#22C55E;--accent2:#F59E0B">
+<div class="grid-overlay"></div>
+<div class="glow one"></div>
+<div class="glow two"></div>
+<header class="nav">
+<div class="wrap nav-inner">
+<a class="brand" href="#top">
+<span class="brand-mark"><svg viewbox="0 0 24 24"><rect height="14" rx="3" width="14" x="5" y="5"></rect><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"></path><circle cx="12" cy="12" r="2.5"></circle></svg></span>
+<span>Pasillo Seguro<small>Portfolio · Arduino UNO Q</small></span>
+</a>
+<nav aria-label="Navegación" class="nav-links">
+<a href="#problema">Visión</a>
+<a href="#como">Cómo funciona</a>
+<a href="#arquitectura">Arquitectura</a>
+<a href="#docs">Documentación</a>
+<a class="btn btn-ghost" href="https://github.com/wanderc137/pasillo-seguro-unoq" rel="noopener" style="padding:9px 15px" target="_blank">GitHub</a>
+</nav>
+</div>
+</header>
+<main id="top">
+<section class="hero"><div class="wrap hero-grid"><div class="hero-copy"><div class="eyebrow">Arduino UNO Q · Percepción en C</div><h1>Pasillo <span class="grad">Seguro</span></h1><p class="lead">Un teléfono con IP Webcam transmite video por la red local; la UNO Q lo decodifica y calcula el riesgo de choque sin nube. El borde de la página cambia de color: verde para avanzar, ámbar para precaución, rojo para detenerse.</p><div class="hero-actions"><a class="btn btn-primary" href="https://github.com/wanderc137/pasillo-seguro-unoq" rel="noopener" target="_blank">Ver el repositorio</a><a class="btn btn-ghost" href="#concepto">Cómo funciona</a></div><div class="badges"><span class="badge">C + libjpeg</span><span class="badge">IP Webcam MJPEG</span><span class="badge">Puerto 8020</span><span class="badge">Sin nube</span></div></div>
+<div class="hero-visual"><div class="visual-frame" style="padding:18px">
+<svg aria-label="Teléfono, UNO Q y alerta por color" role="img" style="width:100%;height:auto;display:block" viewbox="0 0 520 320">
+<defs><lineargradient id="pg" x1="0" x2="1" y1="0" y2="1">
+<stop offset="0" stop-color="#00D8C0"></stop><stop offset="1" stop-color="#2E7DFF"></stop>
+</lineargradient></defs>
+<rect fill="none" height="190" rx="14" stroke="#00D8C0" stroke-width="2" width="120" x="18" y="70"></rect>
+<rect fill="rgba(0,216,192,.10)" height="132" rx="6" stroke="#2E7DFF" width="84" x="36" y="92"></rect>
+<circle cx="78" cy="244" fill="#00D8C0" r="5"></circle>
+<text fill="#9db4bd" font-family="monospace" font-size="11" text-anchor="middle" x="78" y="58">IP Webcam</text>
+<path d="M150 165h74" stroke="url(#pg)" stroke-dasharray="6 4" stroke-width="2"></path>
+<path d="M218 159l10 6-10 6" fill="#2E7DFF"></path>
+<rect fill="rgba(0,216,192,.08)" height="94" rx="12" stroke="#00D8C0" stroke-width="2" width="150" x="236" y="118"></rect>
+<text fill="#e6f0f3" font-family="monospace" font-size="12" text-anchor="middle" x="311" y="158">UNO Q</text>
+<text fill="#9db4bd" font-family="monospace" font-size="10" text-anchor="middle" x="311" y="178">decode · riesgo</text>
+<path d="M398 165h56" stroke="url(#pg)" stroke-dasharray="6 4" stroke-width="2"></path>
+<path d="M448 159l10 6-10 6" fill="#2E7DFF"></path>
+<rect fill="none" height="138" rx="10" stroke="#14F195" stroke-width="4" width="42" x="462" y="96"></rect>
+<text fill="#14F195" font-family="monospace" font-size="10" text-anchor="middle" x="483" y="86">verde</text>
+</svg></div>
+<div class="visual-caption">Del stream MJPEG al riesgo de choque, en la placa.</div></div>
+</div></section>
+
+
+
+
+
+
+
+
+<div class="rich-block"><section class="section" id="concepto"><div class="wrap"><div class="section-head"><div class="kicker">El concepto</div><h2>Qué es y por qué existe</h2><p class="section-sub">El problema, el enfoque y el alcance real del proyecto.</p></div><div class="concept-grid"><div><p>Pasillo Seguro es un backend en C para la Arduino UNO Q que evalúa el riesgo de avanzar por un pasillo concurrido. Toma el stream MJPEG de un teléfono con IP Webcam, lo procesa en resolución reducida y sirve una página con el video anotado y un borde verde, ámbar o rojo. No usa nube, OpenCV, Python ni GStreamer en runtime: solo libjpeg del sistema.</p><p>Demuestra que un binario C pequeño puede sostener 12,3 fps y 79 ms de latencia en la placa, y 37,1 fps en un notebook x86_64 con el mismo código. No mide distancias métricas ni sustituye un sensor de seguridad: obstáculos estáticos, transparentes o camuflados pueden no detectarse, y una multitud densa fusiona componentes. El borde es informativo; no controla ningún robot.</p></div><div class="concept-side"><div class="k">Cómo leer esta ficha</div><p>Los tropiezos salen de la bitácora y de las versiones tempranas. La evaluación usa seis criterios fijos, de 1 a 5, y no premia la espectacularidad: premia que el proyecto se pueda reproducir y entender.</p></div></div></div></section><section class="section tight"><div class="wrap"><div class="section-head"><div class="kicker">El proyecto en detalle</div><h2>Documentación preservada</h2><p class="section-sub">El README original, completo y en su contexto.</p></div><div class="detail rich">
+<p><strong>Percepción local para caminar por un pasillo concurrido.</strong> Un teléfono con
+<a href="https://play.google.com/store/apps/details?id=com.pas.webcam">IP Webcam</a> transmite
+video por la red local; la Arduino UNO Q lo procesa <strong>sin nube</strong> y sirve una página
+web con el video anotado. El borde de la imagen cambia de color según el riesgo de
+choque:</p>
+<ul>
+<li><strong>Verde</strong>: camino libre, se puede avanzar.</li>
+<li><strong>Ámbar</strong>: hay algo en el corredor, precaución.</li>
+<li><strong>Rojo</strong>: riesgo inminente, detenerse.</li>
+</ul>
+<p>El backend está escrito en <strong>C</strong> (servidor HTTP, cliente MJPEG, decodificación
+JPEG, visión y riesgo). La interfaz es HTML/CSS/JavaScript servida por el propio
+binario. No se instala nada en la UNO Q para ejecutarlo: usa la libjpeg que ya
+tiene el sistema.</p>
+<pre><code> Teléfono (IP Webcam)                 Arduino UNO Q                     Teléfono / tablet
+ ┌──────────────────┐   MJPEG/LAN   ┌─────────────────────────┐  HTTP   ┌──────────────────┐
+ │ cámara + stream  │ ────────────► │ pasillo-seguro (C)      │ ──────► │ página web local │
+ │ 192.168.x.x:8080 │               │ decode + visión + riesgo│         │ borde verde/rojo │
+ └──────────────────┘               │ HTTP :8020 + MJPEG out  │         └──────────────────┘
+                                    └─────────────────────────┘
+</code></pre>
+<h2 id="estado-del-proyecto">Estado del proyecto</h2>
+<ul>
+<li>Binario C <code>pasillo-seguro</code>, puerto <strong>8020</strong>.</li>
+<li>Fuente de video: IP Webcam por <strong>LAN/Wi-Fi</strong> o, si hay cable, <strong>USB/ADB</strong>.</li>
+<li>Detección de objetos/personas en movimiento, corredor central, crecimiento
+  (tiempo al contacto), tracking e histéresis.</li>
+<li>Sin nube, sin internet, sin guardar video.</li>
+<li>Servicio sin sudo con <code>scripts/servicio.sh</code> y arranque automático opcional por cron.</li>
+<li>Tests: <code>make test</code> (unitarios C + integración con fuente sintética).</li>
+</ul>
+<h3 id="rendimiento-medido">Rendimiento medido</h3>
+<table>
+<thead>
+<tr>
+<th>Escenario</th>
+<th>Resolución</th>
+<th>FPS procesados</th>
+<th>Latencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UNO Q + teléfono real (MJPEG LAN)</td>
+<td>1080×1920</td>
+<td><strong>12,3 fps</strong></td>
+<td><strong>~79 ms</strong></td>
+</tr>
+<tr>
+<td>Notebook (mismo binario C, x86_64)</td>
+<td>1080×1920</td>
+<td>37,1 fps</td>
+<td>~26 ms</td>
+</tr>
+<tr>
+<td>Fuente sintética en la UNO Q</td>
+<td>640×480</td>
+<td>~12 fps (tope de salida)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>El teléfono de prueba estaba en 1080p vertical y la UNO Q sostuvo 12 fps con
+procesamiento completo. La resolución de proceso se adapta al aspecto de la
+entrada (108×192 para vertical, 192×144 para horizontal).</p>
+<h2 id="que-necesitas">Qué necesitás</h2>
+<ul>
+<li>Arduino UNO Q con Debian, Python no es necesario para ejecutar el binario.</li>
+<li>Teléfono Android con <strong>IP Webcam</strong> y la cámara desbloqueada.</li>
+<li>Red local: hotspot del teléfono, Wi-Fi sin internet o cable USB (opcional).</li>
+<li>Para compilar: una notebook con <code>gcc</code> y <code>aarch64-linux-gnu-gcc</code>
+  (<code>sudo apt-get install -y gcc-aarch64-linux-gnu</code>), más los headers de libjpeg.
+  El binario se copia a la placa; <strong>no hace falta compilar en la UNO Q</strong>.</li>
+</ul>
+<h2 id="puesta-en-marcha-rapida">Puesta en marcha rápida</h2>
+<h3 id="1-preparar-ip-webcam">1. Preparar IP Webcam</h3>
+<ol>
+<li>Abrí IP Webcam en el teléfono.</li>
+<li>En <strong>Video preferences</strong>, elegí la resolución más alta que aguante el teléfono
+   (1080p o 720p). En <strong>Photo settings</strong>, subí la calidad.</li>
+<li>Iniciá el servidor. La app muestra una dirección tipo
+   <code>http://192.168.1.50:8080</code>.</li>
+<li>Anotá la IP; si cambia, se escribe de nuevo en la página.</li>
+</ol>
+<h3 id="2-desplegar-en-la-uno-q">2. Desplegar en la UNO Q</h3>
+<p>Desde la notebook, en la carpeta del proyecto:</p>
+<pre><code class="language-bash">./scripts/build_arm64.sh
+./scripts/deploy_unoq.sh
+</code></pre>
+<p><code>deploy_unoq.sh</code> compila, copia el binario, <code>web/</code>, el script de servicio y
+reinicia en el puerto 8020. No usa sudo y preserva <code>data/</code>.</p>
+<p>Si preferís hacerlo a mano:</p>
+<pre><code class="language-bash">scp pasillo-seguro-arm64 arduino@&lt;IP_UNO_Q&gt;:/home/arduino/pasillo-seguro-unoq/pasillo-seguro
+scp -r web arduino@&lt;IP_UNO_Q&gt;:/home/arduino/pasillo-seguro-unoq/
+ssh arduino@&lt;IP_UNO_Q&gt; 'cd ~/pasillo-seguro-unoq &amp;&amp; ./scripts/servicio.sh start'
+</code></pre>
+<h3 id="3-abrir-la-pagina">3. Abrir la página</h3>
+<p>En el teléfono (o en una tablet) abrí:</p>
+<pre><code>http://&lt;IP_DE_LA_UNO_Q&gt;:8020/
+</code></pre>
+<p>La UNO Q debe tener una IP fija o reservada en la red local. Se puede ver con
+<code>hostname -I</code> en la placa. La página se sirve desde la UNO Q; no depende de
+internet.</p>
+<ol>
+<li>Escribí la IP del teléfono en <strong>IP o URL del teléfono</strong>.</li>
+<li>Tocá <strong>Probar conexión</strong>. Debe responder con la resolución real.</li>
+<li>Tocá <strong>Iniciar</strong>.</li>
+<li>Caminá con el teléfono apuntando al frente. El borde cambia de color.</li>
+</ol>
+<blockquote>
+<p>El teléfono puede ser cámara y pantalla a la vez. Si Android corta la cámara al
+abrir el navegador, usá un segundo teléfono/tablet como visor.</p>
+</blockquote>
+<h2 id="la-pagina">La página</h2>
+<ul>
+<li><strong>Conexión</strong>: IP/URL manual, botón de prueba, persistencia en <code>localStorage</code>.</li>
+<li><strong>Transporte</strong>: Wi-Fi/LAN o USB/ADB.</li>
+<li><strong>Visor</strong>: MJPEG en vivo con el borde de riesgo dibujado dentro del cuadro y
+  también en el CSS.</li>
+<li><strong>Métricas</strong>: riesgo, objetos, FPS, latencia y fuente.</li>
+<li><strong>Sensibilidad</strong>: baja, media o alta. Alta es más conservadora (se pone rojo
+  antes); baja tolera más.</li>
+<li><strong>Ayuda</strong>: pasos para la feria.</li>
+</ul>
+<h3 id="estados">Estados</h3>
+<table>
+<thead>
+<tr>
+<th>Color</th>
+<th>Significado</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Verde</td>
+<td>Sin obstáculos en el corredor</td>
+<td>Avanzar</td>
+</tr>
+<tr>
+<td>Ámbar</td>
+<td>Objeto en el corredor o acercándose</td>
+<td>Atención, reducir velocidad</td>
+</tr>
+<tr>
+<td>Rojo</td>
+<td>Tiempo al contacto corto / objeto muy cerca</td>
+<td>Detenerse</td>
+</tr>
+</tbody>
+</table>
+<p>La histéresis evita parpadeos: para pasar a rojo hacen falta varios cuadros de
+riesgo alto; para volver a verde, varios cuadros de riesgo bajo.</p>
+<h2 id="como-se-detecta-el-riesgo">Cómo se detecta el riesgo</h2>
+<p>El binario C hace visión clásica, sin redes neuronales:</p>
+<ol>
+<li><strong>Downscale</strong> del frame a 108×192 (vertical) o 192×144 (horizontal) y escala
+   de grises.</li>
+<li><strong>Diferencia</strong> contra el frame anterior y suavizado.</li>
+<li><strong>Movimiento por bloques</strong> 8×8 con búsqueda de desplazamiento y compensación
+   del movimiento global de la cámara (la persona que camina).</li>
+<li><strong>Máscara de movimiento</strong> + limpieza morfológica + componentes conexas.</li>
+<li><strong>Tracking</strong> por centroide con velocidad, área y crecimiento.</li>
+<li><strong>Riesgo por objeto</strong>:
+   - intersección con el corredor central,
+   - cercanía (posición inferior en el cuadro),
+   - crecimiento del área (looming / tiempo al contacto),
+   - velocidad lateral y tamaño.</li>
+<li><strong>Riesgo global</strong> = máximo; <strong>histéresis</strong> para el color final.</li>
+<li><strong>Dibujo</strong> del borde, cajas de objetos y texto (<code>AVANZA</code>, <code>PRECAUCION</code>,
+   <code>STOP</code>) en el frame antes de comprimir a JPEG.</li>
+</ol>
+<h3 id="limites-honestos">Límites honestos</h3>
+<ul>
+<li>No es un modelo neuronal (YOLO, etc.). La UNO Q no trae PyTorch/ONNX/TFLite y
+  el proyecto no instala nada. Es un pipeline clásico de movimiento/looming.</li>
+<li>Detecta bien <strong>objetos/personas que se mueven o se acercan</strong>. Un obstáculo
+  completamente estático y camuflado puede no detectarse si la cámara también
+  está quieta.</li>
+<li>La cámara en movimiento agrega ruido; la compensación global ayuda, pero
+  escenas muy cargadas o con cambios de luz pueden dar falsos positivos.</li>
+<li>El borde es <strong>informativo</strong>. No frena robots ni reemplaza la atención de la
+  persona. Para uso crítico hace falta un sensor de distancia (LiDAR/ultrasonido)
+  y un modelo entrenado.</li>
+</ul>
+<h2 id="compilar-y-probar">Compilar y probar</h2>
+<pre><code class="language-bash">make native        # binario x86_64 para probar en la notebook
+make test          # tests C + integración con fuente sintética
+make arm64         # binario aarch64 para la UNO Q
+</code></pre>
+<p>Dependencias de compilación:</p>
+<ul>
+<li><code>gcc</code>, <code>make</code>, <code>libjpeg</code> (headers v8 en el host) para <code>native</code>.</li>
+<li><code>aarch64-linux-gnu-gcc</code> para <code>arm64</code>.</li>
+<li><code>third_party/libjpeg62/</code>: headers de libjpeg 6.2 extraídos del paquete
+  <code>libjpeg62-turbo-dev</code> de Debian. La placa tiene <code>libjpeg.so.62</code>; por eso el
+  binario ARM se compila con esos headers, no con los v8 del host.</li>
+<li><code>third_party/libjpeg-arm64/libjpeg.so.62</code>: copia de la librería de la placa,
+  usada solo para enlazar el binario ARM. No se publica en el repo.</li>
+</ul>
+<h2 id="servicio-sin-sudo">Servicio sin sudo</h2>
+<pre><code class="language-bash">scripts/servicio.sh start
+scripts/servicio.sh stop
+scripts/servicio.sh restart
+scripts/servicio.sh status
+scripts/servicio.sh logs 80
+scripts/servicio.sh boot-enable      # cron @reboot
+scripts/servicio.sh boot-disable
+scripts/servicio.sh boot-status
+</code></pre>
+<ul>
+<li>PID: <code>data/pasillo.pid</code></li>
+<li>Log: <code>data/server.log</code></li>
+<li>Lock: <code>data/servicio.lock</code></li>
+<li>Puertos <strong>8000</strong> (<code>detector-tarjetas</code>) y <strong>8010</strong> (<code>superfoto</code>) están
+  prohibidos por el script; el proyecto usa <strong>8020</strong>.</li>
+<li><code>config.env</code> (opcional, ignorado por git) permite fijar <code>PS_PORT</code>,
+  <code>PS_CAMERA_URL</code>, <code>PS_TRANSPORT</code> y <code>PS_ADB_PATH</code>.</li>
+</ul>
+<h2 id="api-local">API local</h2>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Descripción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/</code></td>
+<td>Página</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/stream.mjpg</code></td>
+<td>MJPEG anotado</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/snapshot.jpg</code></td>
+<td>Último frame JPEG</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/health</code></td>
+<td>Estado básico</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/status</code></td>
+<td>Riesgo, objetos, FPS, latencia, ADB</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/probe?url=IP:8080</code></td>
+<td>Prueba <code>/photo.jpg</code> y devuelve resolución</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/start?url=IP:8080&amp;sensitivity=medium</code></td>
+<td>Inicia captura</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/stop</code></td>
+<td>Detiene captura</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/usb/status</code></td>
+<td>Estado de ADB (solo loopback)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/usb/setup</code></td>
+<td><code>adb forward</code> + <code>adb reverse</code> (solo loopback)</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/usb/teardown</code></td>
+<td>Quita los forwards (solo loopback)</td>
+</tr>
+</tbody>
+</table>
+<p>Ejemplo:</p>
+<pre><code class="language-bash">curl "http://&lt;IP_UNO_Q&gt;:8020/api/probe?url=192.168.1.50:8080"
+curl -X POST "http://&lt;IP_UNO_Q&gt;:8020/api/start?url=192.168.1.50:8080&amp;sensitivity=medium"
+curl "http://&lt;IP_UNO_Q&gt;:8020/api/status"
+</code></pre>
+<h2 id="usbadb-opcional">USB/ADB (opcional)</h2>
+<p>Si hay cable de datos y depuración USB activa:</p>
+<ol>
+<li>Conectar el teléfono al puerto <strong>USB-A host</strong> de la UNO Q.</li>
+<li>Activar <strong>Opciones de desarrollador → Depuración USB</strong> y aceptar el diálogo RSA.</li>
+<li>En la página, elegir <strong>USB/ADB</strong> y <strong>Preparar USB</strong>.</li>
+<li>La app ejecuta:
+   <code>bash
+   adb forward tcp:8080 tcp:8080   # cámara en 127.0.0.1:8080
+   adb reverse tcp:8020 tcp:8020   # página en 127.0.0.1:8020</code></li>
+<li>Abrir <code>http://127.0.0.1:8020/</code> en el teléfono.</li>
+</ol>
+<p>Sin cable, usá LAN/Wi-Fi. Los endpoints USB solo aceptan conexiones desde
+<code>127.0.0.1</code>.</p>
+<h2 id="estructura-del-repositorio">Estructura del repositorio</h2>
+<pre><code>src/
+  main.c        configuración, hilo de captura, hilo ADB, fuente sintética
+  server.c      HTTP, MJPEG, API, archivos estáticos
+  camera.c      cliente MJPEG y reconexión
+  jpeg.c        decode/encode con libjpeg
+  vision.c      downscale, movimiento, componentes, tracking, dibujo
+  risk.c        riesgo por objeto e histéresis
+  adb.c         forward/reverse/status de ADB
+  util.c        tiempo, JSON, normalización de URL, HTTP GET
+web/            index.html, app.js, style.css, favicon.svg
+scripts/        build_arm64.sh, deploy_unoq.sh, servicio.sh
+tests/          test_core.c, integration.py
+docs/           datasheet.md, developer.md, limites-y-alcance.md, servicio.md
+third_party/    headers libjpeg v8/v62 (la .so ARM no se versiona)
+</code></pre>
+<h2 id="solucion-de-problemas">Solución de problemas</h2>
+<table>
+<thead>
+<tr>
+<th>Síntoma</th>
+<th>Causa / solución</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Probar conexión</code> da 502</td>
+<td>IP/puerto mal, teléfono en otra red, IP Webcam detenido o firewall.</td>
+</tr>
+<tr>
+<td>La imagen está negra</td>
+<td>Cámara tapada, teléfono boca abajo o poca luz.</td>
+</tr>
+<tr>
+<td>Borde rojo con el pasillo vacío</td>
+<td>Bajar sensibilidad; cambiar de ángulo; evitar apuntar a una pared que se acerca.</td>
+</tr>
+<tr>
+<td>Borde verde con una persona cerca</td>
+<td>La persona está quieta o el contraste es bajo; subir sensibilidad y mejorar la luz.</td>
+</tr>
+<tr>
+<td>FPS bajo</td>
+<td>Bajar resolución del teléfono a 720p; cerrar apps; usar 5 GHz/hotspot.</td>
+</tr>
+<tr>
+<td><code>adb: none</code></td>
+<td>Cable de datos, depuración USB, aceptar RSA, puerto USB-A host.</td>
+</tr>
+<tr>
+<td>El servicio no arranca</td>
+<td><code>scripts/servicio.sh logs 80</code>; verificar que el puerto 8020 esté libre.</td>
+</tr>
+<tr>
+<td>Cambió la IP del teléfono</td>
+<td>Escribirla de nuevo y <strong>Probar conexión</strong>.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="advertencias">Advertencias</h2>
+<ul>
+<li>Esto es una <strong>demostración</strong> de percepción local; no es un sistema de seguridad
+  certificado.</li>
+<li>No lo uses para controlar un robot o vehículo sin una capa de seguridad
+  independiente.</li>
+<li>No expongas el puerto 8020 a internet. La página no tiene autenticación.</li>
+<li>No toca los servicios existentes de la UNO Q (<code>detector-tarjetas:8000</code>,
+  <code>superfoto:8010</code>).</li>
+</ul>
+<h2 id="ficha-de-evaluacion">Ficha de evaluación</h2>
+<p><strong>Madurez global: 3.7/5</strong></p>
+<table>
+<thead>
+<tr>
+<th>Criterio</th>
+<th style="text-align: right;">Nota</th>
+<th>Evidencia</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Madurez</td>
+<td style="text-align: right;">3/5</td>
+<td>Una sola versión sin número declarado, con medidas reales de 12,3 fps y 79 ms en la UNO Q. No tiene bitácora, estado actual ni suite de pruebas de hardware.</td>
+</tr>
+<tr>
+<td>Reproducibilidad</td>
+<td style="text-align: right;">3/5</td>
+<td>Incluye binarios x86_64 y ARM64 y objetivos make native, test y arm64. La compilación ARM exige toolchain aarch64 y cabeceras libjpeg62 provistas en third_party.</td>
+</tr>
+<tr>
+<td>Documentación</td>
+<td style="text-align: right;">4/5</td>
+<td>README, datasheet, developer, límites y guía de servicio cubren pipeline, API, compilación y operación. Falta la bitácora de decisiones que sí tienen los otros repos.</td>
+</tr>
+<tr>
+<td>Honestidad de límites</td>
+<td style="text-align: right;">5/5</td>
+<td>Explicita que no hay distancia métrica, que el TTC es relativo al crecimiento aparente, que la multitud fusiona componentes y que el borde no controla nada.</td>
+</tr>
+<tr>
+<td>Valor demostrativo</td>
+<td style="text-align: right;">4/5</td>
+<td>Muestra visión embebida en C puro, sin OpenCV ni Python, con menos de 5 MB de almacenamiento y el mismo binario en placa y notebook.</td>
+</tr>
+<tr>
+<td>Facilidad de despliegue</td>
+<td style="text-align: right;">3/5</td>
+<td>deploy_unoq.sh compila, copia y reinicia sin sudo, pero requiere compilador cruzado y bibliotecas de enlace. La variante ADB no está validada.</td>
+</tr>
+</tbody>
+</table>
+<p>Sirve a quien quiera un detector de proximidad mínimo en C sobre la UNO Q y aprender a cruzar compilación ARM, MJPEG y percepción clásica. La limitación que más pesa es la detección: al depender del movimiento, un obstáculo quieto puede pasar desapercibido y el sistema solo es informativo.</p>
+<h2 id="lo-que-no-funciono">Lo que no funcionó</h2>
+<h3 id="compilacion-arm-libjpeg-desajuste-de-version-de-libjpeg">Compilación ARM · libjpeg — Desajuste de versión de libjpeg</h3>
+<p>El binario ARM compilado con cabeceras v8 abortaba al arrancar con «Wrong JPEG library version: library is 62, caller expects 80». Se compiló contra cabeceras v62 y se enlazó la libjpeg.so.62 que trae la placa.</p>
+<h3 id="parser-mjpeg-resincronizacion-por-soieoi">Parser MJPEG — Resincronización por SOI/EOI</h3>
+<p>El parser busca marcadores SOI/EOI: tolera cortes de red pero descarta el cuadro truncado, lo que puede bajar los fps con WiFi mala. Queda documentada la migración a un parser por boundary y Content-Length.</p>
+<h3 id="transporte-usbadb-ruta-adb-sin-validar">Transporte USB/ADB — Ruta ADB sin validar</h3>
+<p>La opción USB/ADB con adb forward y reverse está implementada, pero no se probó sin cable en la placa. La vía recomendada y medida es IP Webcam por LAN.</p>
+<h3 id="deteccion-obstaculos-estaticos-o-camuflados">Detección — Obstáculos estáticos o camuflados</h3>
+<p>La detección se basa en diferencia entre cuadros: un obstáculo quieto o del color del fondo puede no aparecer, y una multitud densa fusiona componentes. Se declara como límite y no se promete seguridad certificada.</p>
+<h2 id="preguntas-tipicas">Preguntas típicas</h2>
+<p><strong>¿Qué es Pasillo Seguro?</strong></p>
+<p>Es un servidor en C que recibe el video de un teléfono con IP Webcam, estima el riesgo de avanzar y devuelve una página con el stream anotado y un borde verde, ámbar o rojo. Corre entero en la Arduino UNO Q.</p>
+<p><strong>¿Qué no hace?</strong></p>
+<p>No mide distancias en metros ni reemplaza un sensor de seguridad, no registra video y no controla un robot o una puerta. Tampoco detecta de forma garantizada obstáculos transparentes, pequeños o quietos.</p>
+<p><strong>¿Cómo se ejecuta o despliega?</strong></p>
+<p>Se compila con make native o make arm64 y se despliega con scripts/deploy_unoq.sh, que copia el binario y los estáticos y reinicia el puerto 8020. En local se prueba con make test o con el modo --fake.</p>
+<p><strong>¿Qué se puede reutilizar?</strong></p>
+<p>El servidor HTTP y MJPEG en C, el parser de URLs, la búsqueda de movimiento por bloques con compensación global y la máquina de histéresis son piezas reutilizables. También el esquema de servicio sin sudo con PID y lock.</p>
+<h2 id="licencia">Licencia</h2>
+<p>MIT. Ver <code>LICENSE</code>.</p></div></div></section><section class="section tight"><div class="wrap"><div class="section-head"><div class="kicker">Tropiezos</div><h2>Los tropiezos, documentados</h2><p class="section-sub">Lo que no funcionó en las primeras versiones, con la corrección aplicada.</p></div><div class="fail-grid"><div class="fail"><div class="v">Compilación ARM · libjpeg</div><h3>Desajuste de versión de libjpeg</h3><p>El binario ARM compilado con cabeceras v8 abortaba al arrancar con «Wrong JPEG library version: library is 62, caller expects 80». Se compiló contra cabeceras v62 y se enlazó la libjpeg.so.62 que trae la placa.</p></div><div class="fail"><div class="v">Parser MJPEG</div><h3>Resincronización por SOI/EOI</h3><p>El parser busca marcadores SOI/EOI: tolera cortes de red pero descarta el cuadro truncado, lo que puede bajar los fps con WiFi mala. Queda documentada la migración a un parser por boundary y Content-Length.</p></div><div class="fail"><div class="v">Transporte USB/ADB</div><h3>Ruta ADB sin validar</h3><p>La opción USB/ADB con adb forward y reverse está implementada, pero no se probó sin cable en la placa. La vía recomendada y medida es IP Webcam por LAN.</p></div><div class="fail"><div class="v">Detección</div><h3>Obstáculos estáticos o camuflados</h3><p>La detección se basa en diferencia entre cuadros: un obstáculo quieto o del color del fondo puede no aparecer, y una multitud densa fusiona componentes. Se declara como límite y no se promete seguridad certificada.</p></div></div></div></section><section class="section tight"><div class="wrap"><div class="section-head"><div class="kicker">Evaluación</div><h2>Cómo se mide este proyecto</h2><p class="section-sub">Seis criterios fijos, con la evidencia que respalda cada nota.</p></div><div class="rating-head"><div class="rating-avg">3.7<small>/5</small></div><p>Sirve a quien quiera un detector de proximidad mínimo en C sobre la UNO Q y aprender a cruzar compilación ARM, MJPEG y percepción clásica. La limitación que más pesa es la detección: al depender del movimiento, un obstáculo quieto puede pasar desapercibido y el sistema solo es informativo.</p></div><div class="rating"><div class="rating-row"><div class="rating-name">Madurez</div><div class="rating-bar"><span style="width:60%"></span></div><div class="rating-score">3/5</div><div class="rating-note">Una sola versión sin número declarado, con medidas reales de 12,3 fps y 79 ms en la UNO Q. No tiene bitácora, estado actual ni suite de pruebas de hardware.</div></div><div class="rating-row"><div class="rating-name">Reproducibilidad</div><div class="rating-bar"><span style="width:60%"></span></div><div class="rating-score">3/5</div><div class="rating-note">Incluye binarios x86_64 y ARM64 y objetivos make native, test y arm64. La compilación ARM exige toolchain aarch64 y cabeceras libjpeg62 provistas en third_party.</div></div><div class="rating-row"><div class="rating-name">Documentación</div><div class="rating-bar"><span style="width:80%"></span></div><div class="rating-score">4/5</div><div class="rating-note">README, datasheet, developer, límites y guía de servicio cubren pipeline, API, compilación y operación. Falta la bitácora de decisiones que sí tienen los otros repos.</div></div><div class="rating-row"><div class="rating-name">Honestidad de límites</div><div class="rating-bar"><span style="width:100%"></span></div><div class="rating-score">5/5</div><div class="rating-note">Explicita que no hay distancia métrica, que el TTC es relativo al crecimiento aparente, que la multitud fusiona componentes y que el borde no controla nada.</div></div><div class="rating-row"><div class="rating-name">Valor demostrativo</div><div class="rating-bar"><span style="width:80%"></span></div><div class="rating-score">4/5</div><div class="rating-note">Muestra visión embebida en C puro, sin OpenCV ni Python, con menos de 5 MB de almacenamiento y el mismo binario en placa y notebook.</div></div><div class="rating-row"><div class="rating-name">Facilidad de despliegue</div><div class="rating-bar"><span style="width:60%"></span></div><div class="rating-score">3/5</div><div class="rating-note">deploy_unoq.sh compila, copia y reinicia sin sudo, pero requiere compilador cruzado y bibliotecas de enlace. La variante ADB no está validada.</div></div></div></div></section><section class="section tight"><div class="wrap"><div class="section-head"><div class="kicker">Preguntas</div><h2>Lo que suelen preguntar</h2></div><div class="faq"><details><summary>¿Qué es Pasillo Seguro?</summary><p>Es un servidor en C que recibe el video de un teléfono con IP Webcam, estima el riesgo de avanzar y devuelve una página con el stream anotado y un borde verde, ámbar o rojo. Corre entero en la Arduino UNO Q.</p></details><details><summary>¿Qué no hace?</summary><p>No mide distancias en metros ni reemplaza un sensor de seguridad, no registra video y no controla un robot o una puerta. Tampoco detecta de forma garantizada obstáculos transparentes, pequeños o quietos.</p></details><details><summary>¿Cómo se ejecuta o despliega?</summary><p>Se compila con make native o make arm64 y se despliega con scripts/deploy_unoq.sh, que copia el binario y los estáticos y reinicia el puerto 8020. En local se prueba con make test o con el modo --fake.</p></details><details><summary>¿Qué se puede reutilizar?</summary><p>El servidor HTTP y MJPEG en C, el parser de URLs, la búsqueda de movimiento por bloques con compensación global y la máquina de histéresis son piezas reutilizables. También el esquema de servicio sin sudo con PID y lock.</p></details></div></div></section></div><section class="cta">
+<div class="wrap">
+<div class="cta-card reveal">
+<div class="kicker" style="justify-content:center">Portfolio · Arduino UNO Q</div>
+<h2>¿Construimos algo así?</h2>
+<p>Si te sirve o quieres construir algo parecido, el código está abierto.</p>
+<div class="hero-actions">
+<a class="btn btn-primary" href="https://wanderc137.github.io/" rel="noopener" target="_blank">Ver todos los proyectos <svg viewbox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"></path></svg></a>
+<a class="btn btn-ghost" href="https://github.com/wanderc137/pasillo-seguro-unoq" rel="noopener" target="_blank">Explorar el código</a>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer>
+<div class="wrap">
+<div class="foot-grid">
+<div>
+<div class="foot-brand"><span class="brand-mark"><svg viewbox="0 0 24 24"><rect height="14" rx="3" width="14" x="5" y="5"></rect><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"></path><circle cx="12" cy="12" r="2.5"></circle></svg></span>Pasillo Seguro</div>
+<p class="foot-p">Pasillo Seguro: asistente visual de colisión, documentación y límites reales en un solo lugar.</p>
+</div>
+<div>
+<h4>Este proyecto</h4>
+<div class="foot-links">
+<a href="https://github.com/wanderc137/pasillo-seguro-unoq" rel="noopener" target="_blank">Repositorio en GitHub</a>
+<a href="https://github.com/wanderc137/pasillo-seguro-unoq/blob/main/README.md" rel="noopener" target="_blank">README técnico</a>
+<a href="https://github.com/wanderc137/pasillo-seguro-unoq/blob/main/docs/datasheet.md" rel="noopener" target="_blank">Datasheet</a>
+<a href="https://github.com/wanderc137/pasillo-seguro-unoq/blob/main/docs/developer.md" rel="noopener" target="_blank">Guía de desarrollador</a>
+<a href="https://github.com/wanderc137/pasillo-seguro-unoq/blob/main/docs/servicio.md" rel="noopener" target="_blank">Runbook de la placa</a>
+</div>
+</div>
+<div>
+<h4>Otros proyectos</h4>
+<div class="foot-links"><a href="https://wanderc137.github.io/vending-solana-unoq/">Vending Solana</a><a href="https://wanderc137.github.io/UnoQ/">Dos cerebros, un pin</a><a href="https://wanderc137.github.io/JarvisCAN/">JarvisCAN</a><a href="https://wanderc137.github.io/JarvisUNOQ/">JarvisUNOQ</a><a href="https://wanderc137.github.io/AnalizadorRostroUNOQ-v2/">Analizador de Rostro</a><a href="https://wanderc137.github.io/GestureCubeUNOQ/">GestureCube</a><a href="https://wanderc137.github.io/AnalizadorRostroUNOQ/">AnalizadorRostro v1</a><a href="https://wanderc137.github.io/superfoto-unoq/">SuperFoto</a><a href="https://wanderc137.github.io/detector-tarjetas/">Detector de tarjetas</a><a href="https://wanderc137.github.io/netEspNow-v1.4/">netEspNow</a><a href="https://wanderc137.github.io/nb2700-telemetria/">NB2700 Telemetría</a><a href="https://wanderc137.github.io/CubeCell-LoRaWAN-Node-v1.3/">CubeCell Bridge</a><a href="https://wanderc137.github.io/BusAccel-8266-v4/">BusAccel</a><a href="https://wanderc137.github.io/valvulas-zigbee/">Válvulas Zigbee</a><a href="https://wanderc137.github.io/TotemAutoatencion/">Totem Autoatención</a><a href="https://wanderc137.github.io/CashDroController/">CashDro Controller</a><a href="https://wanderc137.github.io/proxy-openrouter-ia-chinas/">OpenRouter Proxy</a><a href="https://wanderc137.github.io/mega-free-chat/">Mega Free Chat</a><a href="https://wanderc137.github.io/SpeechToTextAuxPy/">SpeechToText Aux</a><a href="https://wanderc137.github.io/teleAsistenciaV1.3/">Alerta Mayor</a><a href="https://wanderc137.github.io/turnero/">Turnero</a><a href="https://wanderc137.github.io/mesacerca/">MesaCerca</a><a href="https://wanderc137.github.io/permaweb-app/">Permaweb App</a></div>
+</div>
+</div>
+<div class="foot-bottom">
+<span><a href="https://wanderc137.github.io/">Portfolio</a> · © 2026 wanderc137 · Licencia MIT</span>
+<span>Diseñado y construido por wanderc137</span>
+</div>
+</div>
+</footer>
+<script>
+(function(){
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, {threshold: 0.12});
+  document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
+})();
+</script>
+</body>
+</html>

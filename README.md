@@ -283,6 +283,57 @@ third_party/    headers libjpeg v8/v62 (la .so ARM no se versiona)
 - No toca los servicios existentes de la UNO Q (`detector-tarjetas:8000`,
   `superfoto:8010`).
 
+## Ficha de evaluación
+
+**Madurez global: 3.7/5**
+
+| Criterio | Nota | Evidencia |
+|---|---:|---|
+| Madurez | 3/5 | Una sola versión sin número declarado, con medidas reales de 12,3 fps y 79 ms en la UNO Q. No tiene bitácora, estado actual ni suite de pruebas de hardware. |
+| Reproducibilidad | 3/5 | Incluye binarios x86_64 y ARM64 y objetivos make native, test y arm64. La compilación ARM exige toolchain aarch64 y cabeceras libjpeg62 provistas en third_party. |
+| Documentación | 4/5 | README, datasheet, developer, límites y guía de servicio cubren pipeline, API, compilación y operación. Falta la bitácora de decisiones que sí tienen los otros repos. |
+| Honestidad de límites | 5/5 | Explicita que no hay distancia métrica, que el TTC es relativo al crecimiento aparente, que la multitud fusiona componentes y que el borde no controla nada. |
+| Valor demostrativo | 4/5 | Muestra visión embebida en C puro, sin OpenCV ni Python, con menos de 5 MB de almacenamiento y el mismo binario en placa y notebook. |
+| Facilidad de despliegue | 3/5 | deploy_unoq.sh compila, copia y reinicia sin sudo, pero requiere compilador cruzado y bibliotecas de enlace. La variante ADB no está validada. |
+
+Sirve a quien quiera un detector de proximidad mínimo en C sobre la UNO Q y aprender a cruzar compilación ARM, MJPEG y percepción clásica. La limitación que más pesa es la detección: al depender del movimiento, un obstáculo quieto puede pasar desapercibido y el sistema solo es informativo.
+
+## Lo que no funcionó
+
+### Compilación ARM · libjpeg — Desajuste de versión de libjpeg
+
+El binario ARM compilado con cabeceras v8 abortaba al arrancar con «Wrong JPEG library version: library is 62, caller expects 80». Se compiló contra cabeceras v62 y se enlazó la libjpeg.so.62 que trae la placa.
+
+### Parser MJPEG — Resincronización por SOI/EOI
+
+El parser busca marcadores SOI/EOI: tolera cortes de red pero descarta el cuadro truncado, lo que puede bajar los fps con WiFi mala. Queda documentada la migración a un parser por boundary y Content-Length.
+
+### Transporte USB/ADB — Ruta ADB sin validar
+
+La opción USB/ADB con adb forward y reverse está implementada, pero no se probó sin cable en la placa. La vía recomendada y medida es IP Webcam por LAN.
+
+### Detección — Obstáculos estáticos o camuflados
+
+La detección se basa en diferencia entre cuadros: un obstáculo quieto o del color del fondo puede no aparecer, y una multitud densa fusiona componentes. Se declara como límite y no se promete seguridad certificada.
+
+## Preguntas típicas
+
+**¿Qué es Pasillo Seguro?**
+
+Es un servidor en C que recibe el video de un teléfono con IP Webcam, estima el riesgo de avanzar y devuelve una página con el stream anotado y un borde verde, ámbar o rojo. Corre entero en la Arduino UNO Q.
+
+**¿Qué no hace?**
+
+No mide distancias en metros ni reemplaza un sensor de seguridad, no registra video y no controla un robot o una puerta. Tampoco detecta de forma garantizada obstáculos transparentes, pequeños o quietos.
+
+**¿Cómo se ejecuta o despliega?**
+
+Se compila con make native o make arm64 y se despliega con scripts/deploy_unoq.sh, que copia el binario y los estáticos y reinicia el puerto 8020. En local se prueba con make test o con el modo --fake.
+
+**¿Qué se puede reutilizar?**
+
+El servidor HTTP y MJPEG en C, el parser de URLs, la búsqueda de movimiento por bloques con compensación global y la máquina de histéresis son piezas reutilizables. También el esquema de servicio sin sudo con PID y lock.
+
 ## Licencia
 
 MIT. Ver `LICENSE`.
