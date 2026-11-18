@@ -273,6 +273,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.08);pa
 @media(max-width:760px){.concept-grid,.fail-grid{grid-template-columns:1fr}.concept-side{border-left:0;padding-left:0}}
 
 </style>
+<link href="rec/player.css?v=1" rel="stylesheet"/>
 </head>
 <body style="--accent:#22C55E;--accent2:#F59E0B">
 <div class="grid-overlay"></div>
@@ -288,6 +289,7 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.08);pa
 <a href="#problema">Visión</a>
 <a href="#como">Cómo funciona</a>
 <a href="#arquitectura">Arquitectura</a>
+<a href="#video">Video</a>
 <a href="#docs">Documentación</a>
 <a class="btn btn-ghost" href="https://github.com/wanderc137/pasillo-seguro-unoq" rel="noopener" style="padding:9px 15px" target="_blank">GitHub</a>
 </nav>
@@ -324,7 +326,46 @@ footer{position:relative;z-index:1;border-top:1px solid rgba(255,255,255,.08);pa
 
 
 
-<div class="rich-block"><section class="section" id="concepto"><div class="wrap"><div class="section-head"><div class="kicker">El concepto</div><h2>Qué es y por qué existe</h2><p class="section-sub">El problema, el enfoque y el alcance real del proyecto.</p></div><div class="concept-grid"><div><p>Pasillo Seguro es un backend en C para la Arduino UNO Q que evalúa el riesgo de avanzar por un pasillo concurrido. Toma el stream MJPEG de un teléfono con IP Webcam, lo procesa en resolución reducida y sirve una página con el video anotado y un borde verde, ámbar o rojo. No usa nube, OpenCV, Python ni GStreamer en runtime: solo libjpeg del sistema.</p><p>Demuestra que un binario C pequeño puede sostener 12,3 fps y 79 ms de latencia en la placa, y 37,1 fps en un notebook x86_64 con el mismo código. No mide distancias métricas ni sustituye un sensor de seguridad: obstáculos estáticos, transparentes o camuflados pueden no detectarse, y una multitud densa fusiona componentes. El borde es informativo; no controla ningún robot.</p></div><div class="concept-side"><div class="k">Cómo leer esta ficha</div><p>Los tropiezos salen de la bitácora y de las versiones tempranas. La evaluación usa seis criterios fijos, de 1 a 5, y no premia la espectacularidad: premia que el proyecto se pueda reproducir y entender.</p></div></div></div></section><section class="section tight"><div class="wrap"><div class="section-head"><div class="kicker">El proyecto en detalle</div><h2>Documentación preservada</h2><p class="section-sub">El README original, completo y en su contexto.</p></div><div class="detail rich">
+<div class="rich-block"><section class="section" id="concepto"><div class="wrap"><div class="section-head"><div class="kicker">El concepto</div><h2>Qué es y por qué existe</h2><p class="section-sub">El problema, el enfoque y el alcance real del proyecto.</p></div><div class="concept-grid"><div><p>Pasillo Seguro es un backend en C para la Arduino UNO Q que evalúa el riesgo de avanzar por un pasillo concurrido. Toma el stream MJPEG de un teléfono con IP Webcam, lo procesa en resolución reducida y sirve una página con el video anotado y un borde verde, ámbar o rojo. No usa nube, OpenCV, Python ni GStreamer en runtime: solo libjpeg del sistema.</p><p>Demuestra que un binario C pequeño puede sostener 12,3 fps y 79 ms de latencia en la placa, y 37,1 fps en un notebook x86_64 con el mismo código. No mide distancias métricas ni sustituye un sensor de seguridad: obstáculos estáticos, transparentes o camuflados pueden no detectarse, y una multitud densa fusiona componentes. El borde es informativo; no controla ningún robot.</p></div><div class="concept-side"><div class="k">Cómo leer esta ficha</div><p>Los tropiezos salen de la bitácora y de las versiones tempranas. La evaluación usa seis criterios fijos, de 1 a 5, y no premia la espectacularidad: premia que el proyecto se pueda reproducir y entender.</p></div></div></div></section>
+<section class="section tight rec-section" id="video" style="--accent:#2E7DFF;--accent2:#14F195">
+<div class="wrap">
+<div class="rec-kicker">REC · VIDEO · 3:31</div>
+<h2 class="rec-h2">Pasillo Seguro · visión en C puro</h2>
+<p class="rec-lead">Recorrido por el pipeline en C que convierte un MJPEG de teléfono en un semáforo de riesgo: captura con resincronización JPEG, movimiento por bloques, compensación de cámara, componentes conexos, tracking y puntaje con histéresis.</p>
+<div class="rec-banner">
+<span class="rec-banner-icon">📋</span>
+<strong>Puedes copiar y pegar los comandos del video desde el video !!!</strong>
+<span>Pausá, seleccioná el texto de la terminal y copiá.</span>
+</div>
+<div class="rec-shell">
+<div class="rec-bar"><i></i><i></i><i></i><span class="rec-title">Pasillo Seguro · visión en C puro · asciinema</span><span class="rec-rec"><b></b>REC</span></div>
+<div class="rec-screen-wrap">
+<div class="rec-screen" id="rec-screen"></div>
+<div class="rec-poster" id="rec-poster">
+<div class="rec-kicker">ASCIINEMA · 3:31</div>
+<h3>Pasillo Seguro · visión en C puro</h3>
+<p>Recorrido por el pipeline en C que convierte un MJPEG de teléfono en un semáforo de riesgo: captura con resincronización JPEG, movimiento por bloques, compensación de cámara, componentes conexos, tracking y puntaje con histéresis.</p>
+<div class="rec-poster-meta">pasillo-seguro-unoq · código real</div>
+<button class="rec-btn rec-primary" id="rec-start" type="button">▶ Reproducir</button>
+</div>
+</div>
+<div class="rec-controls">
+<button class="rec-btn rec-primary" id="rec-play" type="button">▶ Reproducir</button>
+<button class="rec-btn" id="rec-restart" type="button">↺ Reiniciar</button>
+<input class="rec-progress" id="rec-range" type="range" min="0" max="1000" value="0" aria-label="Progreso"/>
+<span class="rec-time" id="rec-time">0:00 / 3:31</span>
+<select class="rec-speed" id="rec-speed" aria-label="Velocidad"><option value="1">1×</option><option value="1.25">1.25×</option><option value="1.5">1.5×</option><option value="2">2×</option></select>
+<button class="rec-btn" id="rec-full" type="button" title="Pantalla completa">⛶</button>
+<button class="rec-btn" id="rec-copy" type="button">⧉ Copiar comandos</button>
+<a class="rec-download" href="rec/pasillo-seguro-unoq.cast" download>descargar .cast</a>
+</div>
+</div>
+<p class="rec-note">Los fragmentos son del código C real del repositorio, en las líneas indicadas. El proyecto no incluye autenticación: está pensado para una red local, no para exposición a internet.</p>
+<div class="rec-chapters"><span class="rec-chip"><b>0:06</b> EL PROBLEMA</span><span class="rec-chip"><b>0:20</b> ARQUITECTURA</span><span class="rec-chip"><b>0:36</b> CÁMARA</span><span class="rec-chip"><b>0:52</b> MOVIMIENTO</span><span class="rec-chip"><b>1:09</b> COMPENSACIÓN</span><span class="rec-chip"><b>1:27</b> COMPONENTES</span><span class="rec-chip"><b>1:42</b> TRACKING</span><span class="rec-chip"><b>2:01</b> RIESGO</span><span class="rec-chip"><b>2:19</b> HISTÉRESIS</span><span class="rec-chip"><b>2:34</b> SEMÁFORO</span><span class="rec-chip"><b>2:49</b> STREAM</span><span class="rec-chip"><b>3:07</b> CÓMO EJECUTARLO</span></div>
+</div>
+</section>
+
+<section class="section tight"><div class="wrap"><div class="section-head"><div class="kicker">El proyecto en detalle</div><h2>Documentación preservada</h2><p class="section-sub">El README original, completo y en su contexto.</p></div><div class="detail rich">
 <p><strong>Percepción local para caminar por un pasillo concurrido.</strong> Un teléfono con
 <a href="https://play.google.com/store/apps/details?id=com.pas.webcam">IP Webcam</a> transmite
 video por la red local; la Arduino UNO Q lo procesa <strong>sin nube</strong> y sirve una página
@@ -817,5 +858,7 @@ third_party/    headers libjpeg v8/v62 (la .so ARM no se versiona)
   document.querySelectorAll('.reveal').forEach(function(el){ io.observe(el); });
 })();
 </script>
+<script defer src="rec/pasillo-seguro-unoq.cast.js?v=1"></script>
+<script defer src="rec/player.js?v=1"></script>
 </body>
 </html>
